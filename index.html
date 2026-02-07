@@ -3,250 +3,410 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Knowledge DTV | Premium Live Streaming</title>
+  <title>Knowledge DTV</title>
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /*--- Professional UI Foundation ---*/
-    :root {
-      --primary: #e50914; /* Netflix Red */
-      --secondary: #1a1a1a;
-      --accent: #007aff; /* Premium Blue */
-      --text: #ffffff;
-      --bg: #050505;
-    }
-
-    * { box-sizing: border-box; outline: none; }
+    /* NOTE: The existing <style> block is kept, but the new structure below uses inline styles for the main content cards. */
     html, body {
-      margin: 0; padding: 0;
-      background: var(--bg);
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      color: #e0e0e0;
     }
 
-    /*--- Sleek Header ---*/
     header {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 70px;
-      background: rgba(5, 5, 5, 0.8);
-      backdrop-filter: saturate(180%) blur(20px);
-      display: flex; align-items: center; justify-content: center;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      z-index: 1000;
+      z-index: 9999;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
     }
 
-    header img { height: 40px; }
-
-    .menu-btn {
-      position: absolute; left: 20px;
-      color: #fff; font-size: 28px; cursor: pointer;
-      opacity: 0.8; transition: 0.3s;
+    header img {
+      height: 65%;
+      filter: drop-shadow(0 0 8px rgba(29, 185, 84, 0.3));
+      transition: filter 0.3s ease;
     }
-    .menu-btn:hover { opacity: 1; }
 
-    /*--- Premium Video Layout ---*/
-    .main-content {
-      margin-top: 90px;
-      padding: 0 15px;
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
+    header:hover img {
+      filter: drop-shadow(0 0 12px rgba(29, 185, 84, 0.5));
+    }
+
+    /* 🔔 Popup Styles */
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10002;
+    }
+
+    .popup-box {
+      width: 320px;
+      background: rgba(20, 20, 30, 0.6);
+      border: 1px solid rgba(173, 216, 230, 0.25);
+      border-radius: 20px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.4), 0 0 80px rgba(173, 216, 230, 0.15);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      animation: fadeIn 0.5s ease forwards;
+      position: relative;
+    }
+
+    @keyframes fadeIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup-header {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #00eaff, #bd00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+    }
+
+    .popup-subtitle {
+      font-size: 1rem;
+      color: #aaa;
+      margin-bottom: 1.2rem;
+    }
+
+    .popup-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .popup-buttons a {
+      text-decoration: none;
+    }
+
+    .popup-btn {
+      padding: 0.8rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.35s ease;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .join-btn {
+      background: linear-gradient(135deg, #00eaff, #9c00ff);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+    }
+
+    .already-btn {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 1.3rem;
+      color: #00eaff;
+      background: none;
+      border: none;
+      cursor: pointer;
     }
 
     .video-container {
-      position: relative;
-      width: 100%;
+      width: 100vw;
       aspect-ratio: 16/9;
       background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 70px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     }
 
-    .video-container iframe { width: 100%; height: 100%; border: none; }
-
-    /*--- Channel Detail Card ---*/
-    .channel-info {
-      margin-top: 20px;
-      background: linear-gradient(145deg, #111, #080808);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-      display: flex; justify-content: space-between; align-items: center;
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
     }
+    
+    .menu-icon {
+      position: absolute; left: 16px; color: #fff; font-size: 30px; cursor: pointer;
 
-    .status-badge {
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(229, 9, 20, 0.15);
-      color: var(--primary);
-      padding: 6px 14px; border-radius: 20px;
-      font-size: 13px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 1px;
-    }
-
-    .live-dot {
-      width: 8px; height: 8px; background: var(--primary);
-      border-radius: 50%; animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
-    /*--- Interactive Action Buttons ---*/
-    .action-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
-    }
-
-    .action-btn {
-      background: #111; border: 1px solid rgba(255,255,255,0.08);
-      padding: 18px; border-radius: 12px;
-      text-align: center; text-decoration: none; color: #fff;
-      transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex; flex-direction: column; align-items: center; gap: 10px;
-    }
-
-    .action-btn:active { transform: scale(0.95); background: #1a1a1a; }
-
-    .btn-red { background: var(--primary); border: none; font-weight: 600; width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: 10px; color: #fff;}
-
-    /*--- Professional Modern Popup ---*/
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 2000; display: none; align-items: center; justify-content: center;
-    }
-
-    .modal-content {
-      width: 90%; max-width: 400px;
-      background: #161616;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 24px; padding: 35px 25px;
+}
+    
+    .menu-header {
+      font-size: 20px;
+      font-weight: 600;
       text-align: center;
-      animation: modalSlide 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      display: none;
     }
 
-    @keyframes modalSlide { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-    .modal-icon {
-      font-size: 50px; color: var(--primary); margin-bottom: 15px;
+    .overlay.show {
+      display: block;
     }
-
-    .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
-    .modal-text { color: #999; font-size: 15px; line-height: 1.5; margin-bottom: 25px; }
-
-    /*--- Sidebar ---*/
+    
+    /* Sidebar Styles */
     .sidebar {
-      position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
-      background: #0a0a0a; z-index: 2001; transition: 0.3s;
-      padding-top: 20px; border-right: 1px solid rgba(255,255,255,0.1);
+      position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,0.2);
+      color: #fff; z-index: 10001; transition: left 0.5s ease;
+      padding-top: 80px; box-shadow: 4px 0 15px rgba(0,0,0,0.4);
+      border-top-right-radius: 12px; border-bottom-right-radius: 12px;
     }
     .sidebar.open { left: 0; }
     .sidebar a {
-      padding: 15px 25px; display: flex; align-items: center; gap: 15px;
-      color: #ccc; text-decoration: none; font-size: 15px;
+      display: block; padding: 15px 24px; color: #fff; text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-weight: 500; font-size: 16px;
+      transition: background 0.3s, padding-left 0.3s;
     }
-    .sidebar a:hover { background: #111; color: #fff; }
+    .counter-box {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 12px;
+      border-radius: 16px;
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+      margin-top: 1rem;
+    }
+    
+    .counter-box img {
+      height: 48px;
+    }
 
-    @media (max-width: 600px) {
-      .action-grid { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
+<div class="popup-overlay" id="visitorPopup" style="display:none;">
+  <div class="popup-box">
+    <button class="close-btn" onclick="closeVisitorPopup()">×</button>
+    <div class="popup-header">Total Visitors</div>
+    <div class="popup-subtitle">Users Live On Web</div>
+    <div class="counter-box">
+      <img src="https://visit-counter.vercel.app/counter.png?page=allrounder.com&s=40&c=00ff00&bg=00000000&no=10&ff=digi&tb=&ta=" alt="Visitor Count" />
+    </div>
+  </div>
+</div>
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <button class="close-btn" onclick="closePopup()">×</button>
+    <div class="popup-header">Support Us!</div>
+    <div class="popup-subtitle">Join our Telegram for latest updates.</div>
+    <div class="popup-buttons">
+      <a href="https://t.me/+0-F1A_NFqz5kYmY1" target="_blank" class="popup-btn join-btn">Join Now</a>
+      <button class="popup-btn already-btn" onclick="closePopup()">Already Joined</button>
+    </div>
+  </div>
+</div>
+  <header>
+<span class="material-icons menu-icon" onclick="toggleSidebar()">menu</span>
+    <!-- =========== LOGO UPDATED AS PER YOUR REQUEST ============ -->
+    <img src="https://i.ibb.co/3972Y6mY/ei-1767765613174-removebg-preview-1.png" alt="Logo">
+  </header>
+<div class="video-container">
+  <iframe
+    src="https://dillzycreations.github.io/Star-Sports-Hindi/"
+    frameborder="0"
+    allowfullscreen
+    allow="autoplay; encrypted-media"
+    sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+  ></iframe>
+</div>
 
-<header>
-  <span class="material-icons menu-btn" onclick="toggleSidebar()">menu</span>
-  <img src="https://i.ibb.co/3972Y6mY/ei-1767765613174-removebg-preview-1.png" alt="Knowledge DTV">
-</header>
+<!-- =========== DESIGN UPDATED BASED ON IMAGE ============ -->
+<div style="background:#000; padding:20px 15px; font-family:'Poppins', sans-serif; color:#fff;">
+
+    <!-- Channel Info Block -->
+    <div style="
+        background:#212121;
+        padding:15px 20px;
+        border-radius:12px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+    ">
+        <h2 style="margin:0; font-size:20px; font-weight:600;">STAR SPORTS</h2>
+
+        <div style="
+            background:#d1001f;
+            padding:6px 16px;
+            border-radius:8px;
+            font-size:14px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+        ">
+            🔴 LIVE
+        </div>
+    </div>
+
+<!-- Telegram Block -->
+    <div style="
+        background:#212121;
+        padding:18px 20px;
+        border-radius:12px;
+        margin-bottom:20px;
+    ">
+        <p style="
+            margin:0 0 15px;
+            font-size:16px;
+            font-weight:500;
+            color:#c9c9c9;
+            text-align:center;
+        ">
+            🔔 Follow us for Updates!
+        </p>
+
+<a href="https://t.me/+Jt3Hla7_B70xMDFl" target="_blank" style="
+            display:block;
+            background:#d1001f;
+            padding:14px;
+            text-align:center;
+            border-radius:10px;
+            text-decoration:none;
+            color:#fff;
+            font-size:16px;
+            font-weight:600;
+        ">
+            <!-- Material Icons can be used for Telegram icon if needed -->
+            Click Here To Join Telegram
+        </a>
+    </div>
+
+    <!-- Share Block -->
+    <div style="
+        background:#212121;
+        padding:18px 20px;
+        border-radius:12px;
+    ">
+        <p style="
+            margin:0 0 15px;
+            font-size:16px;
+            font-weight:500;
+            color:#c9c9c9;
+            text-align:center;
+        ">
+            🔗 Copy Link & Share
+        </p>
+
+        <button onclick="sharePageLink()" style="
+            display:block;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            background:#d1001f;
+            padding:14px;
+            text-align:center;
+            border-radius:10px;
+            text-decoration:none;
+            color:#fff;
+            font-size:16px;
+            font-weight:600;
+            font-family:'Poppins', sans-serif;
+        ">
+            <!-- Material Icons can be used for Share icon if needed -->
+            Click Here To Share This Page Link
+        </button>
+    </div>
+</div>
+<!-- =========== END OF UPDATED DESIGN ============ -->
+
 
 <div class="sidebar" id="sidebar">
-  <div style="padding: 20px 25px; font-weight: 800; color: var(--primary); font-size: 22px;">KNOWLEDGE DTV</div>
-  <a href="#"><span class="material-icons">home</span> Home Feed</a>
-  <a href="https://t.me/+Jt3Hla7_B70xMDFl"><span class="material-icons">send</span> Join Community</a>
-  <a href="#"><span class="material-icons">security</span> Privacy Policy</a>
+  <div class="menu-header">MENU</div>
+  <a href="https://t.me/+Jt3Hla7_B70xMDFl" target="_blank"> Join Our Telegram</a>
+  <a href="https://t.me/+rwZKMV0-L8wyOTll" target="_blank"> Contact Us</a>
+  <a href="https://t.me/+Jt3Hla7_B70xMDFl" target="_blank">Copyright</a>
+<a href="#" onclick="showVisitorPopup()">Total Visitor</a>
 </div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-<div class="main-content">
-  <div class="video-container">
-    <iframe src="https://allrounderlive.pages.dev/dilz?id=65656576" allowfullscreen allow="autoplay"></iframe>
-  </div>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+  <script>
+    const jsonUrl = 'https://raw.githubusercontent.com/StmpupCricket/Star-Sports-Hindi-json/refs/heads/main/data.json';
+    const telegramLink = 'https://t.me/+Jt3Hla7_B70xMDFl';
 
-  <div class="channel-info">
-    <div>
-      <h1 style="margin:0; font-size:20px; letter-spacing:-0.5px;">JIOHOTSTAR</h1>
-      <p style="margin:5px 0 0; color:#666; font-size:14px;">Broadcasting Live Events</p>
-    </div>
-    <div class="status-badge">
-      <div class="live-dot"></div> Live Now
-    </div>
-  </div>
+    function toggleSidebar() {
 
-  <div class="action-grid">
-    <a href="https://t.me/+Jt3Hla7_B70xMDFl" target="_blank" class="action-btn">
-      <span class="material-icons" style="color:var(--accent);">notifications_active</span>
-      <span style="font-size:14px; font-weight:500;">Get Match Alerts</span>
-    </a>
-    <div class="action-btn" onclick="shareSite()" style="cursor:pointer;">
-      <span class="material-icons" style="color:#4cd964;">share</span>
-      <span style="font-size:14px; font-weight:500;">Share with Friends</span>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal">
-  <div class="modal-content">
-    <span class="material-icons modal-icon">verified</span>
-    <div class="modal-title">Stay Updated!</div>
-    <div class="modal-text">Join our official Telegram community to receive instant notifications for upcoming matches and live stream updates.</div>
-    <a href="https://t.me/+Jt3Hla7_B70xMDFl" class="btn-red" style="text-decoration:none; display:block;">Join Telegram Channel</a>
-    <button onclick="closeModal()" style="margin-top:15px; background:transparent; border:none; color:#666; cursor:pointer; font-weight:500;">Maybe Later</button>
-  </div>
-</div>
-
-<script>
-  // Sidebar Toggle
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
+document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
   }
-
-  // Popup Management
-  function closeModal() {
-    document.getElementById('modal').style.display = 'none';
-  }
-
-  window.onload = () => {
+function closePopup() {
+  document.getElementById('popup').style.display = 'none';
+}
+function showVisitorPopup() {
+    const popup = document.getElementById("visitorPopup");
+    popup.style.display = "flex";
     setTimeout(() => {
-      document.getElementById('modal').style.display = 'flex';
-    }, 1500); // Popup appears after 1.5 seconds
-  };
-
-  // Share Functionality
-  function shareSite() {
-    if (navigator.share) {
-      navigator.share({
-        title: 'Knowledge DTV',
-        text: 'Watch Live Premium Cricket Streaming in HD!',
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
-    }
+      popup.querySelector('.popup-box').style.opacity = '1';
+    }, 10);
   }
 
-  // Close sidebar when clicking outside (Bonus for Pro feel)
-  document.addEventListener('click', function(event) {
-    const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.querySelector('.menu-btn');
-    if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
-      sidebar.classList.remove('open');
-    }
-  });
-</script>
+  function closeVisitorPopup() {
+    const popup = document.getElementById("visitorPopup");
+    popup.querySelector('.popup-box').style.opacity = '0';
+    setTimeout(() => {
+      popup.style.display = "none";
+    }, 300);
+  }
 
+// SHARE FUNCTIONALITY
+async function sharePageLink() {
+    const shareData = {
+        title: 'Knowledge DTV  - Live Match',
+        text: 'Watch Live Cricket Match here: Knowledge DTV ! 🏏\n\nJoin our Telegram Channel for updates: ' + telegramLink,
+        url: window.location.href,
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+        } else {
+            await navigator.clipboard.writeText(shareData.text + '\n\nLink: ' + shareData.url);
+
+alert("Link and sharing text copied! You can now share it anywhere.");
+        }
+    } catch (err) {
+        console.error('Share failed:', err);
+        alert('There was an issue sharing. Please copy the link manually.');
+    }
+}
+  </script>
 </body>
-</html>
+  </html>
